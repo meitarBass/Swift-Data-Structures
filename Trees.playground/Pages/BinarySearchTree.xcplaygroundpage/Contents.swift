@@ -29,7 +29,7 @@ public class BinaryNode<Element> {
         visit(value)
     }
     
-    // O(n) - not a balanced tree
+    // O(n) - not a balanced tree, O(log(n)) if balanced
     var min: BinaryNode {
         leftChild?.min ?? self
     }
@@ -58,6 +58,13 @@ extension BinaryNode: CustomStringConvertible {
                    bottom + "│ ", bottom + "└──", bottom + " ")
   }
 }
+
+// O(n) - not a balanced tree
+func height<T>(of node: BinaryNode<T>?) -> Int {
+    guard let node = node else { return -1 }
+    return 1 + max(height(of: node.leftChild), height(of: node.rightChild))
+}
+
 
 public struct BinarySearchTree<Element: Comparable> {
     
@@ -104,7 +111,7 @@ public struct BinarySearchTree<Element: Comparable> {
     }
     
     // O(n) - not a balanced tree
-    private func remove(node: BinaryNode<Element>?, value: Element) -> BinaryNode<Element>? {
+    private mutating func remove(node: BinaryNode<Element>?, value: Element) -> BinaryNode<Element>? {
         guard let node = node else { return nil}
         if value == node.value {
             // here we actually remove
@@ -143,13 +150,6 @@ extension BinarySearchTree: CustomStringConvertible {
     return String(describing: root)
   }
 }
-
-// O(n) - not a balanced tree
-func height<T>(of node: BinaryNode<T>?) -> Int {
-    guard let node = node else { return -1 }
-    return 1 + max(height(of: node.leftChild), height(of: node.rightChild))
-}
-
 
 var bst = BinarySearchTree<Int>()
 bst.insert(3)
