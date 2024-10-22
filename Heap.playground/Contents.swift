@@ -11,11 +11,7 @@ struct Heap<Element: Equatable> {
         self.sort = sort
         self.elements = elements
         
-        if !elements.isEmpty {
-            for i in stride(from: elements.count / 2 - 1, through: 0, by: -1) {
-                siftDown(from: i)
-            }
-        }
+        buildHeap()
     }
     
     var isEmpty: Bool {
@@ -115,7 +111,33 @@ struct Heap<Element: Equatable> {
         if let j = getIndex(of: element, startingAt: rightChildIndex(ofParentAt: i)) {
             return j
         }
-        
         return nil
     }
+    
+    private mutating func buildHeap() {
+        if !elements.isEmpty {
+            for i in stride(from: elements.count / 2 - 1, through: 0, by: -1) {
+                siftDown(from: i)
+            }
+        }
+    }
+    
+    mutating public func merge(_ heap: Heap) {
+        elements = elements + heap.elements
+        buildHeap()
+    }
+}
+
+
+func getNthSmallestElement(in array: [Int], n: Int) -> Int? {
+    var heap = Heap(sort: <, elements: array)
+    var elementsChecked = 1
+    while !heap.isEmpty {
+        let element = heap.remove()
+        if elementsChecked == n {
+            return element
+        }
+        elementsChecked += 1
+    }
+    return nil
 }
