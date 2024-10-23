@@ -1,3 +1,4 @@
+// O(n^2)
 public func bubbleSort<Element>(_ array: inout [Element]) where Element: Comparable {
     guard array.count >= 2 else { return }
     for end in (1 ..< array.count).reversed() {
@@ -12,6 +13,7 @@ public func bubbleSort<Element>(_ array: inout [Element]) where Element: Compara
     }
 }
 
+// O(n^2)
 public func selectionSort<Element>(_ array: inout [Element]) where Element: Comparable {
     guard array.count >= 2 else { return }
     for current in 0 ..< (array.count - 1) {
@@ -23,5 +25,20 @@ public func selectionSort<Element>(_ array: inout [Element]) where Element: Comp
         }
         
         if lowest != current { array.swapAt(lowest, current) }
+    }
+}
+
+
+// O(n^2)
+public func insertionSort<Element>(_ array: inout [Element]) where Element: Comparable {
+    guard array.count >= 2 else { return }
+    for current in 1 ..< array.count {
+        for shifting in (1...current).reversed() {
+            if array[shifting] < array[shifting - 1] {
+                array.swapAt(shifting, shifting - 1)
+            } else {
+                break
+            }
+        }
     }
 }
