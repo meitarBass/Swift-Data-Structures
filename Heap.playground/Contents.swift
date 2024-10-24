@@ -42,7 +42,7 @@ struct Heap<Element: Equatable> {
         guard !isEmpty else { return nil }
         elements.swapAt(0, count - 1)
         defer {
-            siftDown(from: 0)
+            siftDown(from: 0, upTo: elements.count)
         }
         return elements.removeLast()
     }
@@ -92,7 +92,7 @@ struct Heap<Element: Equatable> {
             elements.swapAt(index, elements.count - 1)
             defer {
                 // only 1 of the operations could work, so we try both and the correct one will be executed
-                siftDown(from: index)
+                siftDown(from: index, upTo: elements.count)
                 siftUp(from: index)
             }
             return elements.removeLast()
@@ -117,7 +117,7 @@ struct Heap<Element: Equatable> {
     private mutating func buildHeap() {
         if !elements.isEmpty {
             for i in stride(from: elements.count / 2 - 1, through: 0, by: -1) {
-                siftDown(from: i)
+                siftDown(from: i, upTo: elements.count)
             }
         }
     }
@@ -141,3 +141,44 @@ func getNthSmallestElement(in array: [Int], n: Int) -> Int? {
     }
     return nil
 }
+
+
+extension Heap {
+    mutating func siftDown(from index: Int, upTo size: Int) {
+        var parent = index
+        while true {
+            let left = leftChildIndex(ofParentAt: parent)
+            let right = rightChildIndex(ofParentAt: parent)
+            
+            var candidate = parent
+            if left < size && sort(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            
+            if right < size && sort(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            
+            if candidate == parent {
+                return
+            }
+            
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
+    }
+    
+    // heap sort - O(nlog(n))
+    func sorted() -> [Element] {
+        var heap = Heap(sort: sort, elements: elements)
+        
+        for index in heap.elements.indices.reversed() {
+            heap.elements.swapAt(0, index)
+            heap.siftDown(from: 0, upTo: index)
+        }
+        return heap.elements
+    }
+}
+
+let heap = Heap(sort: >, elements: [6,12,2,26,8,18,21,9,5])
+print(heap.sorted())
