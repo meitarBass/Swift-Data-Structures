@@ -90,3 +90,32 @@ public func mergeSort<Element>(_ array: [Element]) -> [Element] where Element: C
     
     return merge(left, right)
 }
+
+
+// O(n) space complexity
+// O(n*k) time complexity where k is the number of significant digits of the largest number
+extension Array where Element == Int {
+    public mutating func radixSort() {
+        let base = 10
+        var done = false
+        var digits = 1
+        
+        while !done {
+            done = true
+            
+            var buckets: [[Int]] = .init(repeating: [], count: base)
+            forEach { number in
+                let remainingPart = number / digits
+                let digit = remainingPart % base
+                buckets[digit].append(number)
+                
+                if remainingPart > 0 {
+                    done = false
+                }
+            }
+            
+            digits *= base
+            self = buckets.flatMap { $0 }
+        }
+    }
+}
