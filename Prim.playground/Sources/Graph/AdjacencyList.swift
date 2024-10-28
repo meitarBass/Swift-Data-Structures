@@ -46,3 +46,12 @@ extension AdjacencyList: CustomStringConvertible {
     return result
   }
 }
+
+
+extension AdjacencyList {
+    public func copyVertices(from graph: AdjacencyList) {
+        for vertex in graph.vertices {
+            adjacencies[vertex] = []
+        }
+    }
+}
